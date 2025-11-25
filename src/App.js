@@ -13,6 +13,8 @@ function App() {
   const [insights, setInsights] = useState(null);
   const [campaignInsights, setCampaignInsights] = useState(null);
 
+  // TODO: add error boundary later
+
   useEffect(() => {
     fetchCampaigns();
   }, []);
@@ -32,10 +34,10 @@ function App() {
       setCampaigns(data.campaigns);
       setRetryCount(0);
     } catch (err) {
-      console.error('Failed to load campaigns:', err);
+      console.log('Error loading campaigns:', err);
       if (retryCount < 2) {
         setRetryCount(prev => prev + 1);
-        setTimeout(fetchCampaigns, 2000);
+        setTimeout(() => fetchCampaigns(), 2000);
       } else {
         setError('Unable to load campaigns. Please refresh the page.');
       }
@@ -45,11 +47,23 @@ function App() {
   };
 
   const calculateInsights = () => {
+    let totalImpressions = 0;
+    let totalClicks = 0;
+    let totalConversions = 0;
+    let totalSpend = 0;
+    
+    for(let i = 0; i < campaigns.length; i++) {
+      totalImpressions += campaigns[i].budget * 100;
+      totalClicks += campaigns[i].budget * 5;
+      totalConversions += campaigns[i].budget * 0.5;
+      totalSpend += campaigns[i].budget;
+    }
+    
     const calculated = {
-      total_impressions: campaigns.reduce((sum, c) => sum + (c.budget * 100), 0),
-      total_clicks: campaigns.reduce((sum, c) => sum + (c.budget * 5), 0),
-      total_conversions: campaigns.reduce((sum, c) => sum + (c.budget * 0.5), 0),
-      total_spend: campaigns.reduce((sum, c) => sum + c.budget, 0),
+      total_impressions: totalImpressions,
+      total_clicks: totalClicks,
+      total_conversions: totalConversions,
+      total_spend: totalSpend,
       average_ctr: 5.0,
       average_cpc: 2.5,
       roi: 15.0
@@ -64,7 +78,7 @@ function App() {
         setInsights(data);
       }
     } catch (err) {
-      console.error('Failed to load insights:', err);
+      console.log('Insights error:', err);
     }
   };
 
@@ -75,7 +89,7 @@ function App() {
       const campaignData = await api.getCampaign(campaignId);
       setSelectedCampaign(campaignData.campaign);
     } catch (err) {
-      console.error('Failed to load campaign:', err);
+      console.log('Campaign load error:', err);
       const fallbackCampaign = campaigns.find(c => c.id === campaignId);
       if (fallbackCampaign) {
         setSelectedCampaign(fallbackCampaign);
@@ -88,7 +102,7 @@ function App() {
       const hasValidData = insights && Object.values(insights).some(val => val !== null && val !== undefined && val !== 0);
       setCampaignInsights(hasValidData ? insights : null);
     } catch (insightsErr) {
-      console.error('Failed to load campaign insights:', insightsErr);
+      console.log('Campaign insights error:', insightsErr);
       setCampaignInsights(null);
     }
     
