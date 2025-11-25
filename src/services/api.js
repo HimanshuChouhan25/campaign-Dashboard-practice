@@ -1,9 +1,9 @@
-import { Campaign, CampaignsResponse, CampaignResponse, CampaignInsights, CampaignInsightsResponse, AllCampaignsInsights } from '../types';
+
 
 const API_BASE_URL = 'https://mixo-fe-backend-task.vercel.app';
 
 export const api = {
-  async getCampaigns(): Promise<CampaignsResponse> {
+  async getCampaigns() {
     try {
       const response = await fetch(`${API_BASE_URL}/campaigns`);
       if (!response.ok) {
@@ -16,7 +16,7 @@ export const api = {
     }
   },
 
-  async getCampaign(id: string): Promise<CampaignResponse> {
+  async getCampaign(id) {
     try {
       const response = await fetch(`${API_BASE_URL}/campaigns/${id}`);
       if (!response.ok) {
@@ -31,7 +31,7 @@ export const api = {
     }
   },
 
-  async getAllInsights(): Promise<AllCampaignsInsights> {
+  async getAllInsights() {
     try {
       const response = await fetch(`${API_BASE_URL}/campaigns/insights`);
       if (!response.ok) {
@@ -44,7 +44,7 @@ export const api = {
     }
   },
 
-  async getCampaignInsights(id: string): Promise<CampaignInsightsResponse> {
+  async getCampaignInsights(id) {
     try {
       const response = await fetch(`${API_BASE_URL}/campaigns/${id}/insights`);
       if (!response.ok) {

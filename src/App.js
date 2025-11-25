@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Campaign, AllCampaignsInsights, CampaignInsights } from './types';
 import { api } from './services/api';
 import './App.css';
 
 function App() {
-  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
   const [retryCount, setRetryCount] = useState(0);
-  const [filter, setFilter] = useState<string>('all');
-  const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
+  const [filter, setFilter] = useState('all');
+  const [selectedCampaign, setSelectedCampaign] = useState(null);
   const [modalLoading, setModalLoading] = useState(false);
-  const [insights, setInsights] = useState<AllCampaignsInsights | null>(null);
-  const [campaignInsights, setCampaignInsights] = useState<CampaignInsights | null>(null);
+  const [insights, setInsights] = useState(null);
+  const [campaignInsights, setCampaignInsights] = useState(null);
 
   useEffect(() => {
     fetchCampaigns();
@@ -69,7 +68,7 @@ function App() {
     }
   };
 
-  const handleCampaignDoubleClick = async (campaignId: string) => {
+  const handleCampaignDoubleClick = async (campaignId) => {
     setModalLoading(true);
     
     try {
@@ -105,7 +104,7 @@ function App() {
     filter === 'all' || campaign.status === filter
   );
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status) => {
     switch (status) {
       case 'active': return '#10b981';
       case 'paused': return '#f59e0b';
@@ -114,14 +113,14 @@ function App() {
     }
   };
 
-  const formatCurrency = (amount: number) => {
+  const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD'
     }).format(amount);
   };
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString();
   };
 
